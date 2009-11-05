@@ -18,7 +18,7 @@ Example
     require 'superfeedr-rb'
     require 'pp'
 
-    Superfeedr::Client.connect('demo@superfeedr.com', '*********').do |client
+    Superfeedr::Client.connect('demo@superfeedr.com', '*********').do |client|
       client.feed('http://superfeedr.com/dummy.xml') do |status, entries|
         pp({
           :status => {
