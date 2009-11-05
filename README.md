@@ -31,6 +31,8 @@ Example
         },
         :entries => entries.map { |entry| {
           :id => entry.id,
+          :chunks => entry.chunks,
+          :chunk => entry.chunk,
           :title => entry.title,
           :published => entry.published,
           :content => entry.content,
@@ -41,8 +43,8 @@ Example
             :rel => link.rel,
             :type => link.type,
             :title => link.title
-          }}
-          :authors => link.authors.map { |author| {
+          }},
+          :authors => entry.authors.map { |author| {
             :name => author.name,
             :email => author.email,
             :uri => author.uri
