@@ -14,7 +14,7 @@ def message_node
           <next_fetch>2009-11-05T16:34:12+00:00</next_fetch>
         </status>
         <items node="http://superfeedr.com/dummy.xml">
-          <item chunks="1" chunk="1">
+          <item xmlns="http://jabber.org/protocol/pubsub" chunks="1" chunk="1">
             <entry xmlns="http://www.w3.org/2005/Atom">
               <title>16:32:41</title>
               <id>tag:superfeedr.com,2005:String/1257438761</id>

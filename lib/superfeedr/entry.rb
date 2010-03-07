@@ -3,7 +3,8 @@ module Superfeedr
     NS = 'http://www.w3.org/2005/Atom'.freeze
 
     def self.parse(node)
-      node.find('//ns:event/ns:items/ns:item', :ns => Blather::Stanza::PubSub::Event.registered_ns).map do |item|
+      node.find('//ns:event/ns:items/ns2:item', :ns => Blather::Stanza::PubSub::Event.registered_ns,
+                                                :ns2 => Blather::Stanza::PubSub.registered_ns).map do |item|
         Entry.new('item').inherit(item)
       end
     end
