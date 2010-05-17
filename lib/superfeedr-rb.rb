@@ -4,16 +4,18 @@
 
   superfeedr/entry
   superfeedr/status
+  superfeedr/subscriber
 ].each { |r| require r }
 
 module Superfeedr
 
   class Client < Blather::Client
-    def self.connect(jid, pass, host = nil, port = nil)
+    def self.connect(jid, pass, host = nil, port = nil, socket='/tmp/superfeedr.sock' )
       if block_given?
         client = self.setup jid, pass, host, port
         EM.run {
           yield client
+          EventMachine.start_unix_domain_server(socket, Superfeedr::Subscriber, client)
           client.connect
         }
       else
