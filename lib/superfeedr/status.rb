@@ -1,3 +1,5 @@
+require 'date'
+
 module Superfeedr
   class Status < Blather::XMPPNode
     NS = 'http://superfeedr.com/xmpp-pubsub-ext'.freeze
