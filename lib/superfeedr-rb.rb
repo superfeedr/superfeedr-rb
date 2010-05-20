@@ -4,18 +4,21 @@
 
   superfeedr/entry
   superfeedr/status
-  superfeedr/subscriber
 ].each { |r| require r }
 
 module Superfeedr
 
   class Client < Blather::Client
-    def self.connect(jid, pass, host = nil, port = nil, socket='/tmp/superfeedr.sock' )
+    def self.connect(jid, pass, options={} )
       if block_given?
-        client = self.setup jid, pass, host, port
+        client = self.setup jid, pass, options[:host], options[:port]
         EM.run {
           yield client
-          EventMachine.start_unix_domain_server(socket, Superfeedr::Subscriber, client)
+
+          if options[:subscribe_channel]
+            options[:subscribe_channel].subscribe {|url| client.subscribe(url) }
+          end
+
           client.connect
         }
       else
@@ -28,9 +31,13 @@ module Superfeedr
       @deferred = []
     end
 
+    def subscribe(url)
+      self.write Blather::Stanza::PubSub::Subscribe.new(:set, 'firehoser.superfeedr.com', url, self.jid.stripped)
+    end
+
     def feed(url, &block)
       return if defer(:feed, url, &block)
-      self.write Blather::Stanza::PubSub::Subscribe.new(:set, 'firehoser.superfeedr.com', url, self.jid.stripped)
+      subscribe(url)
 
       self.register_handler(:pubsub_event, "//ns:items[@node='#{url}']", :ns => Blather::Stanza::PubSub::Event.registered_ns) do |evt, _|
         block.call Status.parse(evt), Entry.parse(evt)
